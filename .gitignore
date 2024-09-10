@@ -28,3 +28,5 @@ CMakeFiles/
 .idea/
 cmake-build-debug
 cmake_install.cmake
+*.png
+*.old
