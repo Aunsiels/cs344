@@ -22,4 +22,9 @@
 build
 bin
 
-*.solution
+*solution*
+CMakeCache.txt
+CMakeFiles/
+.idea/
+cmake-build-debug
+cmake_install.cmake
