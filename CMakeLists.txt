@@ -9,9 +9,10 @@ cmake_minimum_required(VERSION 2.6 FATAL_ERROR)
 project(cs344)
 
 find_package(OpenCV REQUIRED)
-find_package(CUDA REQUIRED)
+enable_language(CUDA)
+INCLUDE_DIRECTORIES( "/usr/include/opencv4" )
 
-link_libraries(${OpenCV_LIBS} )
+link_libraries("-lopencv_core -lopencv_imgproc -lopencv_highgui -lopencv_imgcodecs" )
 
 set (EXECUTABLE_OUTPUT_PATH "${CMAKE_SOURCE_DIR}/bin/")
 
