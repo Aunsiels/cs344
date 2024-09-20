@@ -49,6 +49,7 @@ __global__ void rgba_to_greyscale(const uchar4* const rgbaImage,
 	//First create a mapping from the 2D block and grid locations
 	//to an absolute 2D location in the image, then use that to
 	//calculate a 1D offset
+}
 
 
 void your_rgba_to_greyscale(const uchar4 * const h_rgbaImage, uchar4 * const d_rgbaImage,
