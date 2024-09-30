@@ -101,17 +101,17 @@ int main(int argc, char **argv)
     if (cudaGetDeviceProperties(&devProps, dev) == 0)
     {
         printf("Using device %d:\n", dev);
-        printf("%s; global mem: %dB; compute v%d.%d; clock: %d kHz\n",
-               devProps.name, (int)devProps.totalGlobalMem, 
+        printf("%s; global mem: %zuB; compute v%d.%d; clock: %d kHz\n",
+               devProps.name, devProps.totalGlobalMem, 
                (int)devProps.major, (int)devProps.minor, 
                (int)devProps.clockRate);
     }
 
-    const int ARRAY_SIZE = 1 << 20;
+    const int ARRAY_SIZE = 1 << 26;
     const int ARRAY_BYTES = ARRAY_SIZE * sizeof(float);
 
     // generate the input array on the host
-    float h_in[ARRAY_SIZE];
+    float *h_in = new float[ARRAY_SIZE];
     float sum = 0.0f;
     for(int i = 0; i < ARRAY_SIZE; i++) {
         // generate random float in [-1.0f, 1.0f]
@@ -129,6 +129,7 @@ int main(int argc, char **argv)
 
     // transfer the input array to the GPU
     cudaMemcpy(d_in, h_in, ARRAY_BYTES, cudaMemcpyHostToDevice); 
+    free(h_in);
 
     int whichKernel = 0;
     if (argc == 2) {
