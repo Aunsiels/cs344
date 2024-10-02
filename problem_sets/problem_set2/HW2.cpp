@@ -39,7 +39,7 @@ void preProcess(uchar4 **h_inputImageRGBA, uchar4 **h_outputImageRGBA,
     exit(1);
   }
 
-  cv::cvtColor(image, imageInputRGBA, cv::COLOR_BGR2BGRA);
+  cv::cvtColor(image, imageInputRGBA, cv::COLOR_BGR2RGBA);
 
   //allocate memory for the output
   imageOutputRGBA.create(image.rows, image.cols, CV_8UC4);
