@@ -26,29 +26,27 @@
 
 
 #include "utils.h"
+#include <math.h>
 
-__global__
-void yourHisto(const unsigned int* const vals, //INPUT
-               unsigned int* const histo,      //OUPUT
-               int numVals)
+void computeNaiveHistogram(const unsigned int* const d_vals, //INPUT
+                      unsigned int* const d_histo,      //OUTPUT
+                      const unsigned int numBins,
+                      const unsigned int numElems)
 {
-  //TODO fill in this kernel to calculate the histogram
-  //as quickly as possible
+  // Implement the naive histogram using atomic operation
 
-  //Although we provide only one kernel skeleton,
-  //feel free to use more if it will help you
-  //write faster code
+  cudaDeviceSynchronize(); checkCudaErrors(cudaGetLastError());
 }
+
 
 void computeHistogram(const unsigned int* const d_vals, //INPUT
                       unsigned int* const d_histo,      //OUTPUT
                       const unsigned int numBins,
                       const unsigned int numElems)
 {
-  //TODO Launch the yourHisto kernel
-
-  //if you want to use/launch more than one kernel,
-  //feel free
+  // Implement the histogram using shared memory.
+  // In the shared memory, compute a local histogram later used to update the global histogram.
+  // You will need atomic operation at some points, but use them wisely.
 
   cudaDeviceSynchronize(); checkCudaErrors(cudaGetLastError());
 }

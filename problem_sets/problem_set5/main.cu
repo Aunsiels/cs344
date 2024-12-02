@@ -21,6 +21,10 @@ void computeHistogram(const unsigned int *const d_vals,
                       unsigned int* const d_histo,
                       const unsigned int numBins,
                       const unsigned int numElems);
+void computeNaiveHistogram(const unsigned int *const d_vals,
+                      unsigned int* const d_histo,
+                      const unsigned int numBins,
+                      const unsigned int numElems);
 
 int main(void)
 {
@@ -47,11 +51,11 @@ int main(void)
   unsigned int mean = rand() % 100 + 462;
 
   //Output mean so that grading can happen with the same inputs
-  std::cout << mean << std::endl;
+  std::cout << "Mean value: " << mean << std::endl;
 
   thrust::minstd_rand rng;
 
-  thrust::random::experimental::normal_distribution<float> normalDist((float)mean, stddev);
+  thrust::random::normal_distribution<float> normalDist((float)mean, stddev);
 
   // Generate the random values
   for (size_t i = 0; i < numElems; ++i) {
@@ -69,9 +73,30 @@ int main(void)
   checkCudaErrors(cudaMemcpy(d_vals, vals, sizeof(unsigned int) * numElems, cudaMemcpyHostToDevice));
 
   timer.Start();
+  computeNaiveHistogram(d_vals, d_histo, numBins, numElems);
+  timer.Stop();
+  int err = printf("Your naive code ran in: %f msecs.\n", timer.Elapsed());
+
+  if (err < 0) {
+    //Couldn't print! Probably the student closed stdout - bad news
+    std::cerr << "Couldn't print timing information! STDOUT Closed!" << std::endl;
+    exit(1);
+  }
+
+  // copy the student-computed histogram back to the host
+  checkCudaErrors(cudaMemcpy(h_studentHisto, d_histo, sizeof(unsigned int) * numBins, cudaMemcpyDeviceToHost));
+
+  //generate reference for the given mean
+  reference_calculation(vals, h_refHisto, numBins, numElems);
+
+  //Now do the comparison
+  checkResultsExact(h_refHisto, h_studentHisto, numBins);
+
+  checkCudaErrors(cudaMemset(d_histo, 0, sizeof(unsigned int) * numBins));
+  timer.Start();
   computeHistogram(d_vals, d_histo, numBins, numElems);
   timer.Stop();
-  int err = printf("Your code ran in: %f msecs.\n", timer.Elapsed());
+  err = printf("Your code per block ran in: %f msecs.\n", timer.Elapsed());
 
   if (err < 0) {
     //Couldn't print! Probably the student closed stdout - bad news
